@@ -32,15 +32,17 @@ class Account extends CI_Controller
 
 		$row = array(
 			'account_name'		=>	$accountName,
-			'account_pass'		=>	$this->encryptPass($accountPass);
+			'account_pass'		=>	$this->encryptPass($accountPass),
 			'account_regtime'	=>	$time,
 			'account_lastlogin'	=>	$time
 		);
 		$accountId = $this->maccount->create($row);
 
 		$parameter = array(
-			'message'	=>	'ACCOUNT_DEMO_SUCCESS',
-			'accountId'	=>	$accountId
+			'message'		=>	'ACCOUNT_DEMO_SUCCESS',
+			'accountId'		=>	$accountId,
+			'accountName'	=>	$accountName,
+			'accountPass'	=>	$accountPass
 		);
 		echo $this->return_format->format($parameter, $format);
 	}
@@ -54,7 +56,7 @@ class Account extends CI_Controller
 		{
 			$parameter = array(
 				'account_name'	=>	$accountName,
-				'account_pass'	=>	$this->encryptPass($accountPass);
+				'account_pass'	=>	$this->encryptPass($accountPass)
 			);
 			$result = $this->maccount->read($parameter);
 
@@ -62,7 +64,7 @@ class Account extends CI_Controller
 			{
 				$accountId = $result[0]->account_id;
 				$parameter = array(
-					'message'	=>	'ACCOUNT_LOGIN_SUCCESS'
+					'message'	=>	'ACCOUNT_LOGIN_SUCCESS',
 					'accountId'	=>	$accountId
 				);
 				echo $this->return_format->format($parameter, $format);
@@ -70,7 +72,7 @@ class Account extends CI_Controller
 			else
 			{
 				$parameter = array(
-					'error'		=>	'ACCOUNT_LOGIN_ERROR_NO_RESULT',
+					'message'		=>	'ACCOUNT_LOGIN_ERROR_NO_RESULT'
 				);
 				echo $this->return_format->format($parameter, $format);
 			}
@@ -78,7 +80,7 @@ class Account extends CI_Controller
 		else
 		{
 			$parameter = array(
-				'error'		=>	'ACCOUNT_LOGIN_ERROR_NO_PARAM',
+				'message'		=>	'ACCOUNT_LOGIN_ERROR_NO_PARAM'
 			);
 			echo $this->return_format->format($parameter, $format);
 		}
@@ -91,10 +93,10 @@ class Account extends CI_Controller
 
 		if(!empty($accountName) && !empty($accountPass))
 		{
-			if($this->isDuplicated($accountName, $accountPass))
+			if($this->isDuplicated($accountName))
 			{
 				$parameter = array(
-					'error'		=>	'ACCOUNT_REGISTER_ERROR_DUPLICATED',
+					'message'		=>	'ACCOUNT_REGISTER_ERROR_DUPLICATED'
 				);
 				echo $this->return_format->format($parameter, $format);
 			}
@@ -103,7 +105,7 @@ class Account extends CI_Controller
 				$time = time();
 				$row = array(
 					'account_name'		=>	$accountName,
-					'account_pass'		=>	$this->encryptPass($accountPass);
+					'account_pass'		=>	$this->encryptPass($accountPass),
 					'account_regtime'	=>	$time,
 					'account_lastlogin'	=>	$time
 				);
@@ -119,7 +121,7 @@ class Account extends CI_Controller
 		else
 		{
 			$parameter = array(
-				'error'		=>	'ACCOUNT_REGISTER_ERROR_NO_PARAM',
+				'message'		=>	'ACCOUNT_REGISTER_ERROR_NO_PARAM'
 			);
 			echo $this->return_format->format($parameter, $format);
 		}
@@ -127,21 +129,99 @@ class Account extends CI_Controller
 
 	public function check_duplicate($format = 'json')
 	{
+		$accountName = $this->input->get_post('accountName', TRUE);
 
+		if(!empty($accountName))
+		{
+			$parameter = array(
+				'account_name'	=>	$accountName
+			);
+			$result = $this->maccount->read($parameter);
+
+			if($result !== FALSE)
+			{
+				$parameter = array(
+					'message'		=>	'ACCOUNT_CHECK_FAIL'
+				);
+				echo $this->return_format->format($parameter, $format);
+			}
+			else
+			{
+				$parameter = array(
+					'message'	=>	'ACCOUNT_CHECK_SUCCESS'
+				);
+				echo $this->return_format->format($parameter, $format);
+			}
+		}
+		else
+		{
+			$parameter = array(
+				'message'		=>	'ACCOUNT_CHECK_ERROR_NO_PARAM'
+			);
+			echo $this->return_format->format($parameter, $format);
+		}
 	}
 
 	public function modify($format = 'json')
 	{
+		$accountId = $this->input->get_post('accountId', TRUE);
+		$accountName = $this->input->get_post('accountName', TRUE);
+		$accountPass = $this->input->get_post('accountPass', TRUE);
 
-	}
+		if(!empty($accountId))
+		{
+			$row = array();
+			if(!empty($accountName))
+			{
+				if(!$this->isDuplicated($accountName))
+				{
+					$row['account_name'] = $accountName;
+				}
+				else
+				{
+					$parameter = array(
+						'message'		=>	'ACCOUNT_MODIFY_ERROR_DUPLICATED'
+					);
+					echo $this->return_format->format($parameter, $format);
+					exit();
+				}
+			}
+			if(!empty($accountPass))
+			{
+				$row['account_pass'] = $this->encryptPass($accountPass);
+			}
+			if(!empty($row))
+			{
+				$this->maccount->update($accountId, $row);
 
-	private function isDuplicated($accountName, $accountPass)
-	{
-		if(!empty($accountName) && !empty($accountPass))
+				$parameter = array(
+					'message'		=>	'ACCOUNT_MODIFY_SUCCESS'
+				);
+				echo $this->return_format->format($parameter, $format);
+			}
+			else
+			{
+				$parameter = array(
+					'message'		=>	'ACCOUNT_MODIFY_ERROR_NO_CHANGE'
+				);
+				echo $this->return_format->format($parameter, $format);
+			}
+		}
+		else
 		{
 			$parameter = array(
-				'account_name'	=>	$accountName,
-				'account_pass'	=>	$this->encryptPass($accountPass)
+				'message'		=>	'ACCOUNT_MODIFY_ERROR_NO_PARAM'
+			);
+			echo $this->return_format->format($parameter, $format);
+		}
+	}
+
+	private function isDuplicated($accountName)
+	{
+		if(!empty($accountName))
+		{
+			$parameter = array(
+				'account_name'	=>	$accountName
 			);
 			$result = $this->maccount->read($parameter);
 
@@ -163,7 +243,7 @@ class Account extends CI_Controller
 	private function encryptPass($pass)
 	{
 		$this->load->helper('security');
-		return do_hash(do_hash($pass . $this->$encryptKey, 'md5'));
+		return do_hash(do_hash($pass . $this->encryptKey, 'md5'));
 	}
 }
 ?>

@@ -2,7 +2,7 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 require_once('ICrud.php');
 
-class Server extends CI_Model implements ICrud {
+class Mserver extends CI_Model implements ICrud {
 	private $serverTable = 'pulse_serverlist';
 	
 	public function __construct()
