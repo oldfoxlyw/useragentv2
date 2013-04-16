@@ -19,6 +19,7 @@ class Account extends CI_Controller
 		$this->rootPath = $this->config->item('root_path');
 		
 		$this->load->model('maccount');
+		$this->load->model('utils/logs');
 	}
 
 	public function demo($format = 'json')
@@ -38,6 +39,10 @@ class Account extends CI_Controller
 		);
 		$accountId = $this->maccount->create($row);
 
+		$this->logs->write(array(
+			'log_type'		=>	'ACCOUNT_DEMO_SUCCESS',
+			'user_name'		=>	$accountName
+		));
 		$parameter = array(
 			'message'		=>	'ACCOUNT_DEMO_SUCCESS',
 			'accountId'		=>	$accountId,
@@ -63,6 +68,11 @@ class Account extends CI_Controller
 			if($result !== FALSE)
 			{
 				$accountId = $result[0]->account_id;
+
+				$this->logs->write(array(
+					'log_type'		=>	'ACCOUNT_LOGIN_SUCCESS',
+					'user_name'		=>	$accountName
+				));
 				$parameter = array(
 					'message'	=>	'ACCOUNT_LOGIN_SUCCESS',
 					'accountId'	=>	$accountId
@@ -71,6 +81,10 @@ class Account extends CI_Controller
 			}
 			else
 			{
+				$this->logs->write(array(
+					'log_type'		=>	'ACCOUNT_LOGIN_ERROR_NO_RESULT',
+					'user_name'		=>	$accountName
+				));
 				$parameter = array(
 					'message'		=>	'ACCOUNT_LOGIN_ERROR_NO_RESULT'
 				);
@@ -95,6 +109,10 @@ class Account extends CI_Controller
 		{
 			if($this->isDuplicated($accountName))
 			{
+				$this->logs->write(array(
+					'log_type'		=>	'ACCOUNT_REGISTER_ERROR_DUPLICATED',
+					'user_name'		=>	$accountName
+				));
 				$parameter = array(
 					'message'		=>	'ACCOUNT_REGISTER_ERROR_DUPLICATED'
 				);
@@ -111,6 +129,10 @@ class Account extends CI_Controller
 				);
 				$accountId = $this->maccount->create($row);
 
+				$this->logs->write(array(
+					'log_type'		=>	'ACCOUNT_REGISTER_SUCCESS',
+					'user_name'		=>	$accountName
+				));
 				$parameter = array(
 					'message'	=>	'ACCOUNT_REGISTER_SUCCESS',
 					'accountId'	=>	$accountId
@@ -179,6 +201,10 @@ class Account extends CI_Controller
 				}
 				else
 				{
+					$this->logs->write(array(
+						'log_type'		=>	'ACCOUNT_MODIFY_ERROR_DUPLICATED',
+						'user_name'		=>	$accountName
+					));
 					$parameter = array(
 						'message'		=>	'ACCOUNT_MODIFY_ERROR_DUPLICATED'
 					);
