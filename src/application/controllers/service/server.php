@@ -36,7 +36,7 @@ class Server extends CI_Controller
 				)
 			));
 			$parameter = array(
-				'server_list'	=>	$result
+				'lists'	=>	$result
 			);
 			echo $this->return_format->format($parameter);
 		}
