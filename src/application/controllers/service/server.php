@@ -35,7 +35,11 @@ class Server extends CI_Controller
 					'desc'
 				)
 			));
-			echo $this->return_format->format($result);
+			$parameter = array(
+				'message'	=>	'SERVER_LIST',
+				'result'	=>	$result
+			);
+			echo $this->return_format->format($parameter);
 		}
 		else
 		{
