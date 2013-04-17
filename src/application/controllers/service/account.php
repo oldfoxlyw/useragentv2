@@ -220,6 +220,10 @@ class Account extends CI_Controller
 			{
 				$this->maccount->update($accountId, $row);
 
+				$this->logs->write(array(
+					'log_type'		=>	'ACCOUNT_MODIFY_SUCCESS',
+					'user_name'		=>	$accountName
+				));
 				$parameter = array(
 					'message'		=>	'ACCOUNT_MODIFY_SUCCESS'
 				);
