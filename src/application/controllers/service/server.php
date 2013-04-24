@@ -22,6 +22,17 @@ class Server extends CI_Controller
 
 	public function lists($format = 'json')
 	{
+		$this->load->model('status');
+		$result = $this->status->read();
+		if($result->server_status != '1')
+		{
+			$parameter = array(
+				'lists'		=>	'',
+				'message'	=>	$result->closed_message
+			);
+			echo $this->return_format->format($parameter);
+		}
+
 		$gameId = $this->input->get_post('gameId', TRUE);
 
 		if(!empty($gameId))

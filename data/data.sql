@@ -87,6 +87,20 @@ CREATE  TABLE IF NOT EXISTS `useragentv2_db`.`pulse_serverlist` (
 ENGINE = MyISAM
 DEFAULT CHARACTER SET = utf8;
 
+
+-- -----------------------------------------------------
+-- Table `useragentv2_db`.`pulse_server_status`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `useragentv2_db`.`pulse_server_status` ;
+
+CREATE  TABLE IF NOT EXISTS `useragentv2_db`.`pulse_server_status` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `server_status` INT NOT NULL DEFAULT 1 ,
+  `closed_message` TEXT NOT NULL ,
+  `redirect_url` TEXT NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
 USE `useragentv2_db` ;
 
 
