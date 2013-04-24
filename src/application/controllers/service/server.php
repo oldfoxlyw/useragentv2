@@ -31,6 +31,7 @@ class Server extends CI_Controller
 				'message'	=>	$result->closed_message
 			);
 			echo $this->return_format->format($parameter);
+			exit();
 		}
 
 		$gameId = $this->input->get_post('gameId', TRUE);
