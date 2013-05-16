@@ -246,6 +246,51 @@ class Account extends CI_Controller
 		}
 	}
 
+	public function bind_email($format = 'json')
+	{
+		$accountId = $this->input->post('accountId', TRUE);
+		$email = $this->input->post('email', TRUE);
+
+		if(!empty($accountId) && !empty($email))
+		{
+			$this->load->helper('email');
+			if(valid_email($email))
+			{
+				$row = array(
+					'account_email'		=>	$email
+				);
+				if($this->maccount->update($accountId, $row))
+				{
+					$parameter = array(
+						'message'		=>	'ACCOUNT_BIND_EMAIL_SUCCESS'
+					);
+					echo $this->return_format->format($parameter, $format);
+				}
+				else
+				{
+					$parameter = array(
+						'message'		=>	'ACCOUNT_BIND_EMAIL_FAIL'
+					);
+					echo $this->return_format->format($parameter, $format);
+				}
+			}
+			else
+			{
+				$parameter = array(
+					'message'		=>	'ACCOUNT_BIND_EMAIL_ERROR_INVALID'
+				);
+				echo $this->return_format->format($parameter, $format);
+			}
+		}
+		else
+		{
+			$parameter = array(
+				'message'		=>	'ACCOUNT_BIND_EMAIL_ERROR_NO_PARAM'
+			);
+			echo $this->return_format->format($parameter, $format);
+		}
+	}
+
 	private function isDuplicated($accountName)
 	{
 		if(!empty($accountName))
