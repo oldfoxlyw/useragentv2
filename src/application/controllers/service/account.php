@@ -259,20 +259,32 @@ class Account extends CI_Controller
 				$row = array(
 					'account_email'		=>	$email
 				);
-				if($this->maccount->update($accountId, $row))
-				{
-					$parameter = array(
-						'message'		=>	'ACCOUNT_BIND_EMAIL_SUCCESS'
-					);
-					echo $this->return_format->format($parameter, $format);
-				}
-				else
-				{
-					$parameter = array(
-						'message'		=>	'ACCOUNT_BIND_EMAIL_FAIL'
-					);
-					echo $this->return_format->format($parameter, $format);
-				}
+				// $result = $this->maccount->read($row);
+				// if(count($result) > 0)
+				// {
+				// 	$parameter = array(
+				// 		'message'		=>	'ACCOUNT_BIND_EMAIL_ERROR_DUPLICATED'
+				// 	);
+				// 	echo $this->return_format->format($parameter, $format);
+				// 	exit();
+				// }
+				// else
+				// {
+					if($this->maccount->update($accountId, $row))
+					{
+						$parameter = array(
+							'message'		=>	'ACCOUNT_BIND_EMAIL_SUCCESS'
+						);
+						echo $this->return_format->format($parameter, $format);
+					}
+					else
+					{
+						$parameter = array(
+							'message'		=>	'ACCOUNT_BIND_EMAIL_FAIL'
+						);
+						echo $this->return_format->format($parameter, $format);
+					}
+				// }
 			}
 			else
 			{
