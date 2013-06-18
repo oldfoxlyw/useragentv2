@@ -358,6 +358,8 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+//$config['sha1_key'] = 'bbc904d185bb824e5ae5eebf5cc831cf49f44b2b';
+
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
