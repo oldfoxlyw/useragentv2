@@ -34,7 +34,7 @@ class Server extends CI_Controller
 			exit();
 		}
 
-		$gameId = $this->input->get_post('gameId', TRUE);
+		$gameId = 1001;
 
 		if(!empty($gameId))
 		{
