@@ -75,7 +75,7 @@ CREATE  TABLE IF NOT EXISTS `useragentv2_db`.`pulse_serverlist` (
   `server_id` INT(11) NOT NULL ,
   `server_name` CHAR(32) NOT NULL ,
   `server_time_start` INT(11) NOT NULL ,
-  `server_status` ENUM('NORMAL','HOT','CLOSE') NOT NULL DEFAULT 'NORMAL' ,
+  `server_status` ENUM('NORMAL','HOT', 'LOW','CLOSE') NOT NULL DEFAULT 'NORMAL' ,
   `server_web_ip` CHAR(16) NOT NULL ,
   `server_web_port` INT NOT NULL ,
   `server_secure_port` INT NOT NULL ,
@@ -99,7 +99,26 @@ CREATE  TABLE IF NOT EXISTS `useragentv2_db`.`pulse_server_status` (
   `closed_message` TEXT NOT NULL ,
   `redirect_url` TEXT NOT NULL ,
   PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+ENGINE = MyISAM;
+
+
+-- -----------------------------------------------------
+-- Table `useragentv2_db`.`pulse_order`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `useragentv2_db`.`pulse_order` ;
+
+CREATE  TABLE IF NOT EXISTS `useragentv2_db`.`pulse_order` (
+  `order_id` BIGINT NOT NULL AUTO_INCREMENT ,
+  `account_id` BIGINT NOT NULL ,
+  `server_id` INT NOT NULL ,
+  `checksum` CHAR(45) NOT NULL ,
+  `money` INT NOT NULL COMMENT '游戏币' ,
+  `price` INT NOT NULL COMMENT '价格' ,
+  `checkcount` INT NOT NULL DEFAULT 0 ,
+  `posttime` INT NOT NULL ,
+  `updatetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`order_id`) )
+ENGINE = MyISAM;
 
 USE `useragentv2_db` ;
 
