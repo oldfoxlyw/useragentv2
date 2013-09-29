@@ -34,7 +34,7 @@ class Server extends CI_Controller
 			exit();
 		}
 
-		$gameId = 1001;
+		$gameId = 1003;
 
 		if(!empty($gameId))
 		{
